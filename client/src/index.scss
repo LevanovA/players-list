@@ -79,6 +79,10 @@ body {
             width: 300px;
         }
     }
+
+    &__form {
+        max-width: 600px;
+    }
 }
 
 .wrapper {
@@ -86,4 +90,10 @@ body {
     padding: 0 50px;
     margin: 0 auto;
     box-sizing: border-box;
+}
+
+.link {
+    &:not(:last-child) {
+        margin-right: 24px;
+    }
 }
