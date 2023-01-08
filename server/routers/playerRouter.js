@@ -5,7 +5,8 @@ const playerController = require('../controllers/playerController.js');
 router.post('/player', playerController.createPlayer);
 router.get('/player', playerController.getPlayer);
 router.get('/player/:id', playerController.getOnePlayer);
-router.put('/player', playerController.updatePlayer);
-router.delete('/player/:id', playerController.deletePlayer);
+router.post('/update-player', playerController.updatePlayer);
+router.get('/delete-player/:id', playerController.deletePlayer);
+router.post('/get-players-on-date', playerController.getPlayersOnDate);
 
 module.exports = router;

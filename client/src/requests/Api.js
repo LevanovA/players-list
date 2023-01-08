@@ -22,7 +22,15 @@ export default class Api {
         return await this.sendFormData(`/api/player`, 'POST', formData);
     };
 
+    updatePlayer = async (formData) => {
+        return await this.sendFormData(`/api/update-player`, 'POST', formData);
+    };
+
     getPlayers = async () => {
         return await this.getRequest(`/api/player`);
+    };
+
+    deletePlayer = async (id) => {
+        return await this.getRequest(`/api/delete-player/${id}`);
     };
 }

@@ -19,7 +19,7 @@ const CommonList = () => {
         });
 
         request.createPlayer(formData).then((res) => {
-            setMainList(mainList.push(res));
+            setMainList([...mainList, res]);
         });
     };
     const onFinishFailed = (errorInfo) => {
@@ -27,29 +27,67 @@ const CommonList = () => {
     };
 
     useEffect(() => {
-        // request.getPlayers().then((res) => {
-        //     res.map((item) => (item?.type === '0' ? setMainList(mainList.push(item)) : setAdditionalList(additionalList.push(item))));
-        //     console.log(333, mainList);
-        // });
+        request.getPlayers().then((res) => {
+            changePlayersList(res);
+        });
         fetch(fakeDataUrl)
             .then((res) => res.json())
             .then((res) => {
                 setList(res.results);
                 console.log(999, list);
             });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const moveToAdditionalList = () => {
-        console.log(111, 'doit');
+    const moveToAdditionalList = (id, name, surname) => {
+        let formData = new FormData();
+
+        formData.append('id', id);
+        formData.append('name', name);
+        formData.append('surname', surname);
+        formData.append('type', '1');
+
+        request.updatePlayer(formData).then((res) => {
+            changePlayersList(res);
+        });
     };
 
-    const moveToMainlList = () => {
-        console.log(222, 'doit');
+    const moveToMainlList = (id, name, surname) => {
+        let formData = new FormData();
+
+        formData.append('id', id);
+        formData.append('name', name);
+        formData.append('surname', surname);
+        formData.append('type', '0');
+
+        request.updatePlayer(formData).then((res) => {
+            changePlayersList(res);
+        });
+    };
+
+    const deletePlayer = (playerId, type, index) => {
+        request.deletePlayer(playerId).then((res) => {
+            type === 'main'
+                ? setMainList([...mainList.slice(0, index), ...mainList.slice(index + 1)])
+                : setAdditionalList([...additionalList.slice(0, index), ...additionalList.slice(index + 1)]);
+        });
     };
 
     const handleChange = (value) => {
         console.log(`selected ${value}`);
+    };
+
+    const changePlayersList = (playersList) => {
+        let mainPlayers = [];
+        let additionalPlayers = [];
+        console.log(777, playersList);
+        playersList.map((item) => (item?.type === '0' ? mainPlayers.push(item) : additionalPlayers.push(item)));
+        // playersList.map((item) => (item?.type === '0' ? setMainList([...mainList, item]) : setAdditionalList([...additionalList, item])));
+        console.log(888, mainPlayers);
+        console.log(999, additionalPlayers);
+        setMainList(mainPlayers);
+        setAdditionalList(additionalPlayers);
     };
 
     return (
@@ -143,20 +181,32 @@ const CommonList = () => {
                         <List
                             size="large"
                             bordered
-                            dataSource={list}
+                            dataSource={mainList}
                             renderItem={(item, index) => (
                                 <List.Item
                                     actions={[
-                                        <Button type="primary" onClick={moveToAdditionalList} htmlType="button">
+                                        <Button
+                                            type="primary"
+                                            onClick={() => {
+                                                moveToAdditionalList(item.id, item.name, item.surname);
+                                            }}
+                                            htmlType="button"
+                                        >
                                             В дополнительный
                                         </Button>,
-                                        <Button type="primary" onClick={moveToAdditionalList} htmlType="button" danger>
+                                        <Button
+                                            type="primary"
+                                            onClick={() => {
+                                                deletePlayer(item.id, 'main', index);
+                                            }}
+                                            htmlType="button"
+                                            danger
+                                        >
                                             Удалить
                                         </Button>,
                                     ]}
                                 >
-                                    {index + 1 + '. '}
-                                    {item?.name.last + ' ' + item?.surname}
+                                    {index + 1 + '. ' + item?.name + ' ' + item?.surname}
                                 </List.Item>
                             )}
                         />
@@ -166,20 +216,32 @@ const CommonList = () => {
                         <List
                             size="large"
                             bordered
-                            dataSource={list}
+                            dataSource={additionalList}
                             renderItem={(item, index) => (
                                 <List.Item
                                     actions={[
-                                        <Button type="primary" onClick={moveToMainlList} htmlType="button">
+                                        <Button
+                                            type="primary"
+                                            onClick={() => {
+                                                moveToMainlList(item.id, item.name, item.surname);
+                                            }}
+                                            htmlType="button"
+                                        >
                                             В основной
                                         </Button>,
-                                        <Button type="primary" onClick={moveToAdditionalList} htmlType="button" danger>
+                                        <Button
+                                            type="primary"
+                                            onClick={() => {
+                                                deletePlayer(item.id, 'additional', index);
+                                            }}
+                                            htmlType="button"
+                                            danger
+                                        >
                                             Удалить
                                         </Button>,
                                     ]}
                                 >
-                                    {index + 1 + '. '}
-                                    {item?.name.last + ' ' + item?.surname}
+                                    {index + 1 + '. ' + item?.name + ' ' + item?.surname}
                                 </List.Item>
                             )}
                         />
