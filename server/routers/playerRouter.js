@@ -8,5 +8,6 @@ router.get('/player/:id', playerController.getOnePlayer);
 router.post('/update-player', playerController.updatePlayer);
 router.get('/delete-player/:id', playerController.deletePlayer);
 router.post('/get-players-on-date', playerController.getPlayersOnDate);
+router.post('/adds-date-log', playerController.addsDateLog);
 
 module.exports = router;

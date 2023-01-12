@@ -26,6 +26,10 @@ export default class Api {
         return await this.sendFormData(`/api/update-player`, 'POST', formData);
     };
 
+    getPlayersOnDate = async (formData) => {
+        return await this.sendFormData(`/api/get-players-on-date`, 'POST', formData);
+    };
+
     getPlayers = async () => {
         return await this.getRequest(`/api/player`);
     };

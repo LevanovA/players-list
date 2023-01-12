@@ -36,12 +36,21 @@ const Main = () => {
     };
 
     const selectDate = (value) => {
-        console.log(333, value);
+        // console.log(333, value);
+        const formData = new FormData();
         const date = dayjs(value.$d).format('DD.MM.YYYY');
+
         setCurrentDate(date);
 
         //Если вторник или четверг, то выводим календарь
         value.$W === 2 || value.$W === 4 ? setIsWorkout(true) : setIsWorkout(false);
+
+        formData.append('date', date);
+
+        request.getPlayersOnDate(formData).then((res) => {
+            console.log(777, res.date);
+            changePlayersList(res.playerList);
+        });
     };
 
     const changePlayersList = (playersList) => {

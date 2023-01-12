@@ -35,15 +35,23 @@ class Player {
         const { date } = req.body;
         let answer = {};
         const newPlayer = await db.query(`SELECT * FROM players`);
+        const logs = await db.query(`SELECT player_id, position FROM date_logs WHERE date = $1`, [date]);
 
         answer.status = 200;
         answer.date = date;
         answer.playerList = newPlayer.rows;
+        answer.logs = logs.rows;
 
         res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
         res.json(answer);
     }
-    //some
+    async addsDateLog(req, res) {
+        const { date, playerId, position } = req.body;
+        const newPlayer = await db.query(`INSERT INTO date_logs (date, player_id, position) values ($1, $2, $3)`, [date, playerId, position]);
+        res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+        res.json(newPlayer.rows[0]);
+    }
+    //ыпа
 }
 
 module.exports = new Player();
